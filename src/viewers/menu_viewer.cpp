@@ -84,6 +84,16 @@ void MenuViewer::show(MenuEntry * the_menu, uint8_t entry_index, bool clear_scre
   uint8_t idx = 0;
 
   Pos pos(ICONS_LEFT_OFFSET, icon_ypos);
+  int16_t saved_x_positions[MAX_MENU_ENTRY];
+  uint8_t last_visible_idx = 0;
+  
+  // First pass: find the last visible item
+  for (int i = 0; i < MAX_MENU_ENTRY; i++) {
+    if (menu[i].icon == Icon::END_MENU) break;
+    if (menu[i].visible) {
+      last_visible_idx = i;
+    }
+  }
   
   while ((idx < MAX_MENU_ENTRY) && (menu[idx].icon != Icon::END_MENU)) {
 
@@ -92,7 +102,9 @@ void MenuViewer::show(MenuEntry * the_menu, uint8_t entry_index, bool clear_scre
       Font::Glyph * glyph;
       glyph = font->get_glyph(ch, ICON_SIZE);
 
-      if (menu[idx].icon == Icon::NEXT_MENU) pos.x = Screen::get_width() - SPACE_BETWEEN_ICONS;
+      if (idx == last_visible_idx) {
+        pos.x = Screen::get_width() - SPACE_BETWEEN_ICONS - ICONS_RIGHT_OFFSET;
+      }
 
       if (glyph == nullptr) {
         entry_locs[idx].pos = pos;

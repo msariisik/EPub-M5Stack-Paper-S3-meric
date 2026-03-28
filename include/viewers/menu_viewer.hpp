@@ -39,9 +39,11 @@ class MenuViewer
     #if INKPLATE_6PLUS
       static const int16_t SPACE_BETWEEN_ICONS = 70;
       static const int16_t ICONS_LEFT_OFFSET   = 20;
+      static const int16_t ICONS_RIGHT_OFFSET  = 30;
     #else
-      static const int16_t SPACE_BETWEEN_ICONS = 50;
-      static const int16_t ICONS_LEFT_OFFSET   = 10;
+      static const int16_t SPACE_BETWEEN_ICONS = 48;
+      static const int16_t ICONS_LEFT_OFFSET   = 12;
+      static const int16_t ICONS_RIGHT_OFFSET  = 18;
     #endif
 
     uint8_t  current_entry_index;
