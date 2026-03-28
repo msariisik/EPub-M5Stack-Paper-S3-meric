@@ -76,6 +76,46 @@ BookController::open_book_file(
   return false;
 }
 
+bool BookController::go_to_first_page()
+{
+  const PageLocs::PageId * id = page_locs.get_page_id(PageLocs::PageId(0, 0));
+  if (id != nullptr) {
+    current_page_id.itemref_index = id->itemref_index;
+    current_page_id.offset        = id->offset;
+  } else {
+    current_page_id.itemref_index = 0;
+    current_page_id.offset        = 0;
+  }
+  return true;
+}
+
+bool BookController::go_to_last_page()
+{
+  const PageLocs::PageId * id = page_locs.get_last_page_id();
+  if (id != nullptr) {
+    current_page_id.itemref_index = id->itemref_index;
+    current_page_id.offset        = id->offset;
+    return true;
+  } else {
+    msg_viewer.show(MsgViewer::ALERT, true, false, "Not Ready", "The book is still loading its pages.");
+    return false;
+  }
+}
+
+bool BookController::go_to_specific_page(int page_num)
+{
+  if (page_num < 1) page_num = 1;
+  const PageLocs::PageId * id = page_locs.get_page_id_by_page_number(page_num - 1);
+  if (id != nullptr) {
+    current_page_id.itemref_index = id->itemref_index;
+    current_page_id.offset        = id->offset;
+    return true;
+  } else {
+    msg_viewer.show(MsgViewer::ALERT, true, false, "Not Found", "Page number not found or book not fully loaded.");
+    return false;
+  }
+}
+
 #if INKPLATE_6PLUS || TOUCH_TRIAL
   void 
   BookController::input_event(const EventMgr::Event & event)

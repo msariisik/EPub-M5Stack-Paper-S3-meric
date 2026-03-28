@@ -23,6 +23,12 @@ class BookController
                         const std::string & book_filename, 
                         const PageLocs::PageId & page_id);
     void put_str(const char * str, int xpos, int ypos);
+    
+    // Page navigation functions
+    bool go_to_first_page();
+    bool go_to_last_page();
+    bool go_to_specific_page(int page_num);
+
 
     inline const PageLocs::PageId & get_current_page_id() { return current_page_id; }
     inline void set_current_page_id(const PageLocs::PageId & page_id) { current_page_id = page_id; }
