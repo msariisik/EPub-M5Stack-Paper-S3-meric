@@ -861,6 +861,39 @@ PageLocs::get_page_id(const PageId & page_id)
   return (result == pages_map.end()) ? nullptr : &result->first ;
 }
 
+const PageLocs::PageId * 
+PageLocs::get_last_page_id()
+{
+  std::scoped_lock guard(mutex);
+
+  if (!completed && item_count > 0 && items_set.find(item_count - 1) == items_set.end()) {
+    retrieve_asap(item_count - 1);
+  }
+
+  if (pages_map.empty()) return nullptr;
+
+  PagesMap::reverse_iterator it = pages_map.rbegin();
+  while (it != pages_map.rend() && it->second.size < 0) {
+    it++;
+  }
+  return (it == pages_map.rend()) ? nullptr : &it->first;
+}
+
+const PageLocs::PageId * 
+PageLocs::get_page_id_by_page_number(int16_t page_number)
+{
+  std::scoped_lock guard(mutex);
+  if (!completed || pages_map.empty()) return nullptr;
+
+  for (const auto & entry : pages_map) {
+    if (entry.second.page_number == page_number) {
+      return &entry.first;
+    }
+  }
+  
+  return nullptr;
+}
+
 void
 PageLocs::computation_completed()
 {
