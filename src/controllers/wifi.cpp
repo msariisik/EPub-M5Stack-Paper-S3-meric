@@ -109,6 +109,13 @@ WIFI::start(void)
   }
 
   wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+  cfg.tx_buf_type = 1; // WIFI_TX_BUFFER_TYPE_DYNAMIC (shifts TX buffers to PSRAM)
+  cfg.dynamic_tx_buf_num = 16;
+  cfg.static_rx_buf_num = 4;
+  cfg.dynamic_rx_buf_num = 16;
+  cfg.static_tx_buf_num = 8;
+  cfg.cache_tx_buf_num = 4;
+  cfg.mgmt_sbuf_num = 16;
   ESP_ERROR_CHECK(esp_wifi_init(&cfg));
 
   ESP_ERROR_CHECK(esp_event_handler_register(
