@@ -13,14 +13,12 @@ class BookParamController
     static constexpr char const * TAG = "BookParamController";
 
     bool book_params_form_is_shown;
-    bool wait_for_key_after_wifi;
-    bool delete_current_book;
+    bool go_to_page_form_is_shown;
 
   public:
     BookParamController() : 
       book_params_form_is_shown(false), 
-        wait_for_key_after_wifi(false),
-            delete_current_book(false) { };
+      go_to_page_form_is_shown(false) { };
 
     void    input_event(const EventMgr::Event & event);
     void          enter();
@@ -28,8 +26,7 @@ class BookParamController
     void set_font_count(uint8_t count);
 
     inline void set_book_params_form_is_shown() { book_params_form_is_shown = true; }
-    inline void   set_wait_for_key_after_wifi() { wait_for_key_after_wifi   = true; }
-    inline void       set_delete_current_book() { delete_current_book       = true; }
+    inline void set_go_to_page_form_is_shown()  { go_to_page_form_is_shown  = true; }
 };
 
 #if __BOOK_PARAM_CONTROLLER__

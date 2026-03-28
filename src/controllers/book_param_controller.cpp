@@ -40,9 +40,28 @@ static int8_t old_font;
 
 #if INKPLATE_6PLUS || TOUCH_TRIAL
   static constexpr int8_t BOOK_PARAMS_FORM_SIZE = 5;
+  static constexpr int8_t GO_TO_PAGE_FORM_SIZE = 2;
 #else
   static constexpr int8_t BOOK_PARAMS_FORM_SIZE = 4;
+  static constexpr int8_t GO_TO_PAGE_FORM_SIZE = 1;
 #endif
+
+static uint16_t specific_page_number = 1;
+static FormEntry go_to_page_form_entries[GO_TO_PAGE_FORM_SIZE] = {
+  { .caption = "Page Number:",
+    .u = { .val = { .value = &specific_page_number,
+                    .min = 1,
+                    .max = 9999 } },
+    .entry_type = FormEntryType::UINT16 }
+  #if INKPLATE_6PLUS || TOUCH_TRIAL
+    , { .caption = " GO ",
+        .u = { .ch = { .value = &done_res,
+                       .choice_count = 0,
+                       .choices = nullptr } },
+        .entry_type = FormEntryType::DONE }
+  #endif
+};
+
 static FormEntry book_params_form_entries[BOOK_PARAMS_FORM_SIZE] = {
   { .caption = "Font Size:",
     .u = { .ch = { .value = &font_size,
@@ -145,21 +164,43 @@ revert_to_defaults()
   }
 }
 
-static void 
-books_list()
+// Removed books_list as it was moved to home page.
+
+static void go_to_specific_page_form()
 {
-  app_controller.set_controller(AppController::Ctrl::DIR);
+  int16_t pg_count = page_locs.get_page_count();
+  if (pg_count == -1) {
+    msg_viewer.show(MsgViewer::ALERT, false, false, "Not Ready", "The book is still loading its pages.");
+  } else {
+    specific_page_number = page_locs.get_page_nbr(book_controller.get_current_page_id()) + 1;
+    if (specific_page_number < 1) specific_page_number = 1;
+    
+    go_to_page_form_entries[0].u.val.max = pg_count;
+    
+    form_viewer.show(
+      go_to_page_form_entries, 
+      GO_TO_PAGE_FORM_SIZE, 
+      "(Enter page number)");
+
+    book_param_controller.set_go_to_page_form_is_shown();
+  }
 }
 
-static void
-delete_book()
+static void go_to_first_page()
 {
-  msg_viewer.show(MsgViewer::MsgType::CONFIRM, true, false,
-                  "Delete e-book", 
-                  "The e-book \"%s\" will be deleted. Are you sure?", 
-                  epub.get_title());
-  book_param_controller.set_delete_current_book();
+  if (book_controller.go_to_first_page()) {
+    app_controller.set_controller(AppController::Ctrl::LAST);
+  }
 }
+
+static void go_to_last_page()
+{
+  if (book_controller.go_to_last_page()) {
+    app_controller.set_controller(AppController::Ctrl::LAST);
+  }
+}
+
+// Removed delete_book as it was moved to the option controller.
 
 static void 
 toc_ctrl()
@@ -170,21 +211,7 @@ toc_ctrl()
 extern bool start_web_server();
 extern bool  stop_web_server();
 
-static void
-wifi_mode()
-{
-  #if EPUB_INKPLATE_BUILD
-    epub.close_file();
-    fonts.clear(true);
-    fonts.clear_glyph_caches();
-    
-    event_mgr.set_stay_on(true); // DO NOT sleep
-
-    if (start_web_server()) {
-      book_param_controller.set_wait_for_key_after_wifi();
-    }
-  #endif
-}
+// Removed wifi_mode as it was moved to home page.
 
 static void
 power_off()
@@ -197,16 +224,15 @@ power_off()
 // IMPORTANT!!
 // The first (menu[0]) and the last menu entry (the one before END_MENU) MUST ALWAYS BE VISIBLE!!!
 
-static MenuViewer::MenuEntry menu[10] = {
+static MenuViewer::MenuEntry menu[9] = {
   { MenuViewer::Icon::RETURN,      "Return to the e-books reader",         CommonActions::return_to_last, true , true },
   { MenuViewer::Icon::TOC,         "Table of Content",                     toc_ctrl                     , false, true },
-  { MenuViewer::Icon::BOOK_LIST,   "E-Books list",                         books_list                   , true , true },
+  { MenuViewer::Icon::PREV_MENU,   "Go to First Page",                     go_to_first_page             , true , true },
+  { MenuViewer::Icon::BOOK,        "Go to Specific Page",                  go_to_specific_page_form     , true , true },
   { MenuViewer::Icon::FONT_PARAMS, "Current e-book parameters",            book_parameters              , true , true },
   { MenuViewer::Icon::REVERT,      "Revert e-book parameters to "
                                    "default values",                       revert_to_defaults           , true , true },  
-  { MenuViewer::Icon::DELETE,      "Delete the current e-book",            delete_book                  , true , true },
-  { MenuViewer::Icon::WIFI,        "WiFi Access to the e-books folder",    wifi_mode                    , true , true },
-  { MenuViewer::Icon::INFO,        "About the EPub-InkPlate application",  CommonActions::about         , true , true },
+  { MenuViewer::Icon::NEXT_MENU,   "Go to Last Page",                      go_to_last_page              , true , true },
   { MenuViewer::Icon::POWEROFF,    "Power OFF (Deep Sleep)",               power_off                    , true , true },
   { MenuViewer::Icon::END_MENU,    nullptr,                                nullptr                      , false, true }
 }; 
@@ -266,66 +292,15 @@ BookParamController::input_event(const EventMgr::Event & event)
       menu_viewer.clear_highlight();
     }
   }
-  else if (delete_current_book) {
-    bool ok;
-    if (msg_viewer.confirm(event, ok)) {
-      if (ok) {
-        std::string filepath = epub.get_current_filename();
-        struct stat file_stat;
-
-        if (stat(filepath.c_str(), &file_stat) != -1) {
-          LOG_I("Deleting %s...", filepath.c_str());
-
-          epub.close_file();
-          unlink(filepath.c_str());
-
-          int16_t pos = filepath.find_last_of('.');
-
-          filepath.replace(pos, 5, ".pars");
-
-          if (stat(filepath.c_str(), &file_stat) != -1) {
-            LOG_I("Deleting file : %s", filepath.c_str());
-            unlink(filepath.c_str());
-          }
-
-          filepath.replace(pos, 5, ".locs");
-
-          if (stat(filepath.c_str(), &file_stat) != -1) {
-            LOG_I("Deleting file : %s", filepath.c_str());
-            unlink(filepath.c_str());
-          }
-
-          filepath.replace(pos, 5, ".toc");
-
-          if (stat(filepath.c_str(), &file_stat) != -1) {
-            LOG_I("Deleting file : %s", filepath.c_str());
-            unlink(filepath.c_str());
-          }
-
-          int16_t dummy;
-          books_dir.refresh(nullptr, dummy, false);
-
-          app_controller.set_controller(AppController::Ctrl::DIR);
-        }
+  else if (go_to_page_form_is_shown) {
+    if (form_viewer.event(event)) {
+      go_to_page_form_is_shown = false;
+      if (book_controller.go_to_specific_page(specific_page_number)) {
+        app_controller.set_controller(AppController::Ctrl::LAST);
       }
-      else {
-        msg_viewer.show(MsgViewer::MsgType::INFO, false, false, 
-                        "Canceled", "The e-book was not deleted.");
-      }
-      delete_current_book = false;
+      menu_viewer.clear_highlight();
     }
   }
-  #if EPUB_INKPLATE_BUILD
-    else if (wait_for_key_after_wifi) {
-      msg_viewer.show(MsgViewer::MsgType::INFO, 
-                      false, true, 
-                      "Restarting", 
-                      "The device is now restarting. Please wait.");
-      wait_for_key_after_wifi = false;
-      stop_web_server();
-      esp_restart();
-    }
-  #endif
   else {
     if (menu_viewer.event(event)) {
       app_controller.set_controller(AppController::Ctrl::LAST);
