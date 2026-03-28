@@ -10,6 +10,8 @@
 #include "controllers/book_param_controller.hpp"
 #include "controllers/option_controller.hpp"
 #include "controllers/toc_controller.hpp"
+#include "controllers/main_controller.hpp"
+#include "controllers/dashboard_controller.hpp"
 #include "controllers/event_mgr.hpp"
 
 #if INKPLATE_6PLUS
@@ -19,11 +21,11 @@
 #include "screen.hpp"
 
 AppController::AppController() : 
-  current_ctrl(Ctrl::DIR),
+  current_ctrl(Ctrl::MAIN),
      next_ctrl(Ctrl::NONE)
 {
   for (int i = 0; i < LAST_COUNT; i++) {
-    last_ctrl[i] = Ctrl::DIR;
+    last_ctrl[i] = Ctrl::MAIN;
   }
 }
 
@@ -31,7 +33,7 @@ void
 AppController::start()
 {
   current_ctrl = Ctrl::NONE;
-  next_ctrl    = Ctrl::DIR;
+  next_ctrl    = Ctrl::MAIN;
 
   #if EPUB_LINUX_BUILD
     launch();
@@ -64,11 +66,13 @@ void AppController::launch()
   if (((the_ctrl == Ctrl::LAST) && (last_ctrl[0] != current_ctrl)) || (the_ctrl != current_ctrl)) {
 
     switch (current_ctrl) {
-      case Ctrl::DIR:     books_dir_controller.leave(); break;
-      case Ctrl::BOOK:         book_controller.leave(); break;
-      case Ctrl::PARAM:  book_param_controller.leave(); break;
-      case Ctrl::OPTION:     option_controller.leave(); break;
-      case Ctrl::TOC:           toc_controller.leave(); break;
+      case Ctrl::DIR:     books_dir_controller.leave(false); break;
+      case Ctrl::BOOK:         book_controller.leave(false); break;
+      case Ctrl::PARAM:  book_param_controller.leave(false); break;
+      case Ctrl::OPTION:     option_controller.leave(false); break;
+      case Ctrl::TOC:           toc_controller.leave(false); break;
+      case Ctrl::MAIN:         main_controller.leave(false); break;
+      case Ctrl::DASHBOARD: dashboard_controller.leave(false); break;
       case Ctrl::NONE:
       case Ctrl::LAST:                                  break;
     }
@@ -78,7 +82,7 @@ void AppController::launch()
 
     if (the_ctrl == Ctrl::LAST) {
       for (int i = 1; i < LAST_COUNT; i++) last_ctrl[i - 1] = last_ctrl[i];
-      last_ctrl[LAST_COUNT - 1] = Ctrl::DIR;
+      last_ctrl[LAST_COUNT - 1] = Ctrl::MAIN;
     }
     else {
       for (int i = 1; i < LAST_COUNT; i++) last_ctrl[i] = last_ctrl[i - 1];
@@ -91,6 +95,8 @@ void AppController::launch()
       case Ctrl::PARAM:  book_param_controller.enter(); break;
       case Ctrl::OPTION:     option_controller.enter(); break;
       case Ctrl::TOC:           toc_controller.enter(); break;
+      case Ctrl::MAIN:         main_controller.enter(); break;
+      case Ctrl::DASHBOARD: dashboard_controller.enter(); break;
       case Ctrl::NONE:
       case Ctrl::LAST:                                  break;
     }
@@ -119,6 +125,8 @@ AppController::input_event(const EventMgr::Event & event)
     case Ctrl::PARAM:  book_param_controller.input_event(event); break;
     case Ctrl::OPTION:     option_controller.input_event(event); break;
     case Ctrl::TOC:           toc_controller.input_event(event); break;
+    case Ctrl::MAIN:         main_controller.input_event(event); break;
+    case Ctrl::DASHBOARD: dashboard_controller.input_event(event); break;
     case Ctrl::NONE:
     case Ctrl::LAST:                                             break;
   }
@@ -140,6 +148,8 @@ AppController::going_to_deep_sleep()
     case Ctrl::PARAM:  book_param_controller.leave(true); break;
     case Ctrl::OPTION:     option_controller.leave(true); break;
     case Ctrl::TOC:           toc_controller.leave(true); break;
+    case Ctrl::MAIN:         main_controller.leave(true); break;
+    case Ctrl::DASHBOARD: dashboard_controller.leave(true); break;
     case Ctrl::NONE:
     case Ctrl::LAST:                                      break;
   }

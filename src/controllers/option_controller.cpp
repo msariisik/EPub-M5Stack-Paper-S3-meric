@@ -259,6 +259,12 @@ init_nvs()
   }
 #endif
 
+static void 
+go_to_main_menu()
+{
+  app_controller.set_controller(AppController::Ctrl::MAIN);
+}
+
 #if DATE_TIME_RTC
   static void 
   clock_adjust_form()
@@ -370,6 +376,7 @@ static MenuViewer::MenuEntry menu[] = {
   #if INKPLATE_6PLUS || MENU_6PLUS
     { MenuViewer::Icon::NEXT_MENU,   "Other options",                        goto_next                        , true,  true  },
   #endif
+  { MenuViewer::Icon::HOME,          "Go back to the Main Menu",             go_to_main_menu                  , true,  true  },
   { MenuViewer::Icon::END_MENU,       nullptr,                               nullptr                          , false, false }
 };
 

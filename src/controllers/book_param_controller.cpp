@@ -221,10 +221,16 @@ power_off()
   CommonActions::power_it_off();
 }
 
+static void
+return_to_main_menu()
+{
+  app_controller.set_controller(AppController::Ctrl::MAIN);
+}
+
 // IMPORTANT!!
 // The first (menu[0]) and the last menu entry (the one before END_MENU) MUST ALWAYS BE VISIBLE!!!
 
-static MenuViewer::MenuEntry menu[9] = {
+static MenuViewer::MenuEntry menu[] = {
   { MenuViewer::Icon::RETURN,      "Return to the e-books reader",         CommonActions::return_to_last, true , true },
   { MenuViewer::Icon::TOC,         "Table of Content",                     toc_ctrl                     , false, true },
   { MenuViewer::Icon::PREV_MENU,   "Go to First Page",                     go_to_first_page             , true , true },
@@ -234,6 +240,7 @@ static MenuViewer::MenuEntry menu[9] = {
                                    "default values",                       revert_to_defaults           , true , true },  
   { MenuViewer::Icon::NEXT_MENU,   "Go to Last Page",                      go_to_last_page              , true , true },
   { MenuViewer::Icon::POWEROFF,    "Power OFF (Deep Sleep)",               power_off                    , true , true },
+  { MenuViewer::Icon::HOME,        "Go back to the Main Menu",             return_to_main_menu          , true , true },
   { MenuViewer::Icon::END_MENU,    nullptr,                                nullptr                      , false, true }
 }; 
 
