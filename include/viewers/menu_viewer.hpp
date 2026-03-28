@@ -10,15 +10,15 @@
 class MenuViewer
 {
   public:
-    static constexpr uint8_t MAX_MENU_ENTRY = 15;
+    static constexpr uint8_t MAX_MENU_ENTRY = 20;
 
     enum class Icon { RETURN,      CLR_HISTORY, REFRESH,   BOOK,   BOOK_LIST, MAIN_PARAMS, 
                       FONT_PARAMS, POWEROFF,    WIFI,      INFO,   TOC,       DEBUG, 
-                      DELETE,      CLOCK,       NTP_CLOCK, CALIB,  PREV_MENU, NEXT_MENU, REVERT, END_MENU };
-    char icon_char[19] = { 
+                      DELETE,      CLOCK,       NTP_CLOCK, CALIB,  PREV_MENU, NEXT_MENU, REVERT, HOME, END_MENU };
+    char icon_char[21] = { 
                       '@',         'T',         'R',       'E',    'F',       'C', 
                       'A',         'Z',         'S',       'I',    'L',       'H', 
-                      'K',         'N',         'Y',       'M',    'O',       'P',   'U' };
+                      'K',         'N',         'Y',       'M',    'O',       'P',   'U',   'Q', '\0' };
     struct MenuEntry {
       Icon icon;
       const char * caption;
@@ -28,7 +28,7 @@ class MenuViewer
     };
     void  show(MenuEntry * the_menu, uint8_t entry_index = 0, bool clear_screen = false);
     bool event(const EventMgr::Event & event);
-    void clear_highlight();
+    void  clear_highlight();
     
   private:
     static constexpr char const * TAG = "MenuViewer";
@@ -41,7 +41,7 @@ class MenuViewer
       static const int16_t ICONS_LEFT_OFFSET   = 20;
       static const int16_t ICONS_RIGHT_OFFSET  = 30;
     #else
-      static const int16_t SPACE_BETWEEN_ICONS = 48;
+      static const int16_t SPACE_BETWEEN_ICONS = 55;
       static const int16_t ICONS_LEFT_OFFSET   = 12;
       static const int16_t ICONS_RIGHT_OFFSET  = 18;
     #endif
