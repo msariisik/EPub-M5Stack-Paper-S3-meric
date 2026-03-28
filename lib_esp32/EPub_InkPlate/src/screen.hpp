@@ -55,6 +55,7 @@ class Screen : NonCopyable
   public:
     static Screen & get_singleton() noexcept { return singleton; }
     void setup(PixelResolution resolution, Orientation orientation);
+    void deinit();
     void set_pixel_resolution(PixelResolution resolution, bool force = false);
     void set_orientation(Orientation orient);
     inline Orientation get_orientation() { return orientation; }
@@ -154,6 +155,7 @@ class Screen : NonCopyable
   public:
     static Screen & get_singleton() noexcept { return singleton; }
     void setup(PixelResolution resolution, Orientation orientation);
+    void deinit();
     void set_pixel_resolution(PixelResolution resolution, bool force = false);
     void set_orientation(Orientation orient);
     inline Orientation get_orientation() { return orientation; }

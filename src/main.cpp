@@ -115,8 +115,12 @@
       if (fonts.setup()) {
         
         Screen::Orientation    orientation;
+        #if defined(BOARD_TYPE_PAPER_S3)
+          orientation = Screen::Orientation::BOTTOM;
+        #else
+          config.get(Config::Ident::ORIENTATION,      (int8_t *) &orientation);
+        #endif
         Screen::PixelResolution resolution;
-        config.get(Config::Ident::ORIENTATION,      (int8_t *) &orientation);
 
         #if defined(BOARD_TYPE_PAPER_S3)
           // Paper S3 always renders in 4-bit grayscale via epdiy. Do not

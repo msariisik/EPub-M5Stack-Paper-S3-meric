@@ -76,7 +76,10 @@ void Screen::force_full_update()
 void Screen::setup(PixelResolution resolution, Orientation orientation)
 {
   if (!s_epd_initialized) {
-    epd_set_board(&paper_s3_board);
+    static bool hl_inited = false;
+    if (!hl_inited) {
+      epd_set_board(&paper_s3_board);
+    }
     epd_init(epd_current_board(), &ED047TC2, EPD_OPTIONS_DEFAULT);
     // Rotate the epdiy drawing coordinates so that the logical page is
     // portrait when the device is held with USB-C at the bottom and the
@@ -86,7 +89,10 @@ void Screen::setup(PixelResolution resolution, Orientation orientation)
     // vector assembly, so we run the LCD at 5 MHz for stability.
     epd_set_lcd_pixel_clock_MHz(5);
 
-    s_hl = epd_hl_init(EPD_BUILTIN_WAVEFORM);
+    if (!hl_inited) {
+      s_hl = epd_hl_init(EPD_BUILTIN_WAVEFORM);
+      hl_inited = true;
+    }
     epd_hl_set_all_white(&s_hl);
     s_framebuffer = epd_hl_get_framebuffer(&s_hl);
 
@@ -106,6 +112,14 @@ void Screen::setup(PixelResolution resolution, Orientation orientation)
   set_pixel_resolution(PixelResolution::THREE_BITS, true);
   set_orientation(orientation);
   clear();
+}
+
+void Screen::deinit()
+{
+  if (s_epd_initialized) {
+    epd_deinit();
+    s_epd_initialized = false;
+  }
 }
 
 void Screen::set_pixel_resolution(PixelResolution resolution, bool force)
