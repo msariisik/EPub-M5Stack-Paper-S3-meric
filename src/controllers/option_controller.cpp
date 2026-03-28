@@ -308,35 +308,6 @@ go_to_main_menu()
     Clock::set_date_time(t);
   }
 
-  static void
-  ntp_clock_adjust()
-  {
-    page_locs.abort_threads();
-    epub.close_file();
-
-    std::string ntp_server;
-    config.get(Config::Ident::NTP_SERVER, ntp_server);
-
-    msg_viewer.show(MsgViewer::MsgType::NTP_CLOCK, false, true, 
-      "Date/Time Retrival", 
-      "Retrieving Date and Time from NTP Server %s. Please wait.",
-      ntp_server.c_str());
-
-    if (ntp.get_and_set_time()) {
-      time_t time;
-      Clock::get_date_time(time);
-      msg_viewer.show(MsgViewer::MsgType::NTP_CLOCK, true, true, 
-        "Date/Time Retrival Completed", 
-        "Local Time is %s. The device will now restart.", ctime(&time));
-    }
-    else {
-      msg_viewer.show(MsgViewer::MsgType::NTP_CLOCK, true, true, 
-        "Date/Time Retrival Failed", 
-        "Unable to get Date/Time from NTP Server! The device will now restart.");
-    }
-
-    option_controller.set_wait_for_key_after_wifi();
-  }
 #endif
 
 #if EPUB_LINUX_BUILD && DEBUGGING
@@ -363,8 +334,7 @@ static MenuViewer::MenuEntry menu[] = {
   #if !(INKPLATE_6PLUS || MENU_6PLUS)
     { MenuViewer::Icon::CLR_HISTORY, "Clear e-books' read history",          init_nvs                         , true,  true  },
     #if DATE_TIME_RTC
-      { MenuViewer::Icon::CLOCK,     "Set Date/Time",                        clock_adjust_form                , true,  true  },
-      { MenuViewer::Icon::NTP_CLOCK, "Retrieve Date/Time from Time Server",  ntp_clock_adjust                 , true,  true  },
+      { MenuViewer::Icon::CLOCK,     "Set Date/Time (Manual)",               clock_adjust_form                , true,  true  },
     #endif
   #endif
   { MenuViewer::Icon::DELETE,        "Delete the current e-book",            delete_book                      , true,  true  },
@@ -385,8 +355,7 @@ static MenuViewer::MenuEntry sub_menu[] = {
   { MenuViewer::Icon::PREV_MENU,     "Previous options",                     goto_prev                        , true,  true  },
   { MenuViewer::Icon::RETURN,        "Return to the e-books list",           CommonActions::return_to_last    , true,  true  },
   #if DATE_TIME_RTC
-    { MenuViewer::Icon::CLOCK,       "Set Date/Time",                        clock_adjust_form                , true,  true  },
-    { MenuViewer::Icon::NTP_CLOCK,   "Retrieve Date/Time from Time Server",  ntp_clock_adjust                 , true,  true  },
+    { MenuViewer::Icon::CLOCK,       "Set Date/Time (Manual)",               clock_adjust_form                , true,  true  },
   #endif
   { MenuViewer::Icon::DELETE,        "Delete the current e-book",            delete_book                      , true,  true  },
   { MenuViewer::Icon::CALIB,         "Touch Screen Calibration",             calibrate                        , true,  false },
@@ -398,8 +367,7 @@ static MenuViewer::MenuEntry sub_menu[] = {
   { MenuViewer::Icon::PREV_MENU,     "Previous options",                     goto_prev                        , true,  true  },
   { MenuViewer::Icon::RETURN,        "Return to the e-books list",           nullptr                          , true,  true  },
   #if DATE_TIME_RTC
-    { MenuViewer::Icon::CLOCK,       "Set Date/Time",                        nullptr                          , true,  true  },
-    { MenuViewer::Icon::NTP_CLOCK,   "Retrieve Date/Time from Time Server",  nullptr                          , true,  true  },
+    { MenuViewer::Icon::CLOCK,       "Set Date/Time (Manual)",               nullptr                          , true,  true  },
   #endif
   { MenuViewer::Icon::DELETE,        "Delete the current e-book",            nullptr                          , true,  true  },
   { MenuViewer::Icon::CALIB,         "Touch Screen Calibration",             nullptr                          , true,  false },
