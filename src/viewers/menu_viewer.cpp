@@ -110,9 +110,12 @@ void MenuViewer::show(MenuEntry *the_menu, uint8_t entry_index,
   int item_row[MAX_MENU_ENTRY];
   Pos p(ICONS_LEFT_OFFSET, icon_ypos);
 
+  int16_t spacing = SPACE_BETWEEN_ICONS;
+  if (count <= 4) spacing = 150; // Spread out sparse menus like Main Menu
+
   for (int i = 0; i < count; i++) {
     if (row_count[row_val] > 0 &&
-        p.x + SPACE_BETWEEN_ICONS >
+        p.x + spacing >
             Screen::get_width() - ICONS_RIGHT_OFFSET) {
       row_val++;
       p.x = ICONS_LEFT_OFFSET;
@@ -129,16 +132,16 @@ void MenuViewer::show(MenuEntry *the_menu, uint8_t entry_index,
     } else {
       entry_locs[mIdx].dim = Dim(0, 0);
     }
-    p.x += SPACE_BETWEEN_ICONS;
+    p.x += spacing;
   }
 
   for (int r = 0; r <= row_val; r++) {
-    int row_w = row_count[r] * SPACE_BETWEEN_ICONS;
+    int row_w = (row_count[r] > 0) ? ((row_count[r] - 1) * spacing + 50) : 0;
     int start_x = (Screen::get_width() >> 1) - (row_w >> 1);
     for (int i = 0; i < count; i++) {
       if (item_row[i] == r) {
         entry_locs[items[i].m_idx].pos.x = start_x;
-        start_x += SPACE_BETWEEN_ICONS;
+        start_x += spacing;
       }
     }
   }
