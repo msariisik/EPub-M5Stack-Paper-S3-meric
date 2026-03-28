@@ -407,11 +407,11 @@ Screen::set_orientation(Orientation orient)
 {
   orientation = orient;
   if ((orientation == Orientation::LEFT) || (orientation == Orientation::RIGHT)) {
-    width  = 600;
-    height = 800;
+    width  = 540;
+    height = 960;
   }
   else {
-    width  = 800;
-    height = 600;
+    width  = 960;
+    height = 540;
   }
 }

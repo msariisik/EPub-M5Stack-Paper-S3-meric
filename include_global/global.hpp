@@ -29,7 +29,9 @@
 #define USE_EPUB_FONTS 1  ///< 1: Embeded fonts in EPub books are loaded and used 0: Only preset fonts are used
 
 #if EPUB_LINUX_BUILD
-  #define MAIN_FOLDER "/home/turgu1/Dev/EPub-InkPlate/SDCard"
+  #ifndef MAIN_FOLDER
+    #define MAIN_FOLDER "./SDCard"
+  #endif
 #endif
 
 #if EPUB_INKPLATE_BUILD
