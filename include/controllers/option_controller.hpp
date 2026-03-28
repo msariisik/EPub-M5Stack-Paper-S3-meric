@@ -24,6 +24,7 @@ class OptionController
     #endif
 
     bool wait_for_key_after_wifi;
+    bool delete_current_book_is_shown;
 
   public:
     OptionController() : main_form_is_shown(false), 
@@ -35,7 +36,8 @@ class OptionController
                          #if INKPLATE_6PLUS
                            calibration_is_shown(false),
                          #endif
-                         wait_for_key_after_wifi(false) { };
+                         wait_for_key_after_wifi(false),
+                         delete_current_book_is_shown(false) { };
                          
     void    input_event(const EventMgr::Event & event);
     void          enter();
@@ -44,6 +46,7 @@ class OptionController
      
     inline void        set_main_form_is_shown() { main_form_is_shown      = true; }
     inline void        set_font_form_is_shown() { font_form_is_shown      = true; }
+    inline void set_delete_current_book_is_shown() { delete_current_book_is_shown = true; }
 
     #if DATE_TIME_RTC
       inline void set_date_time_form_is_shown() { date_time_form_is_shown = true; }
@@ -63,6 +66,7 @@ class OptionController
       #if INKPLATE_6PLUS
         calibration_is_shown    = false;
       #endif
+      delete_current_book_is_shown = false;
     }
 };
 

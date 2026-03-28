@@ -22,6 +22,9 @@
   #include "esp_system.h"
 #endif
 
+#include <sys/stat.h>
+#include <unistd.h>
+
 // static int8_t boolean_value;
 
 static Screen::Orientation     orientation;
@@ -203,6 +206,21 @@ wifi_mode()
 }
 
 static void
+delete_book()
+{
+  int16_t idx = books_dir_controller.get_current_book_index();
+  if (idx == -1) return;
+  const BooksDir::EBookRecord * book = books_dir.get_book_data(idx);
+  if (book == nullptr) return;
+
+  msg_viewer.show(MsgViewer::MsgType::CONFIRM, true, false,
+                  "Delete e-book", 
+                  "The e-book \"%s\" will be deleted. Are you sure?", 
+                  book->title);
+  option_controller.set_delete_current_book_is_shown();
+}
+
+static void
 init_nvs()
 {
   menu_viewer.clear_highlight();
@@ -343,6 +361,7 @@ static MenuViewer::MenuEntry menu[] = {
       { MenuViewer::Icon::NTP_CLOCK, "Retrieve Date/Time from Time Server",  ntp_clock_adjust                 , true,  true  },
     #endif
   #endif
+  { MenuViewer::Icon::DELETE,        "Delete the current e-book",            delete_book                      , true,  true  },
   #if EPUB_LINUX_BUILD && DEBUGGING
     { MenuViewer::Icon::DEBUG,       "Debugging",                            debugging                        , true,  true  },
   #endif
@@ -362,6 +381,7 @@ static MenuViewer::MenuEntry sub_menu[] = {
     { MenuViewer::Icon::CLOCK,       "Set Date/Time",                        clock_adjust_form                , true,  true  },
     { MenuViewer::Icon::NTP_CLOCK,   "Retrieve Date/Time from Time Server",  ntp_clock_adjust                 , true,  true  },
   #endif
+  { MenuViewer::Icon::DELETE,        "Delete the current e-book",            delete_book                      , true,  true  },
   { MenuViewer::Icon::CALIB,         "Touch Screen Calibration",             calibrate                        , true,  false },
   { MenuViewer::Icon::CLR_HISTORY,   "Clear e-books' read history",          init_nvs                         , true,  true  },
   { MenuViewer::Icon::END_MENU,       nullptr,                               nullptr                          , false, false }
@@ -374,6 +394,7 @@ static MenuViewer::MenuEntry sub_menu[] = {
     { MenuViewer::Icon::CLOCK,       "Set Date/Time",                        nullptr                          , true,  true  },
     { MenuViewer::Icon::NTP_CLOCK,   "Retrieve Date/Time from Time Server",  nullptr                          , true,  true  },
   #endif
+  { MenuViewer::Icon::DELETE,        "Delete the current e-book",            nullptr                          , true,  true  },
   { MenuViewer::Icon::CALIB,         "Touch Screen Calibration",             nullptr                          , true,  false },
   { MenuViewer::Icon::CLR_HISTORY,   "Clear e-books' read history",          nullptr                          , true,  true  },
   { MenuViewer::Icon::END_MENU,       nullptr,                               nullptr                          , false, false }
@@ -503,6 +524,52 @@ OptionController::input_event(const EventMgr::Event & event)
         }
       // }
       menu_viewer.clear_highlight();
+    }
+  }
+  else if (delete_current_book_is_shown) {
+    bool ok;
+    if (msg_viewer.confirm(event, ok)) {
+      if (ok) {
+        int16_t idx = books_dir_controller.get_current_book_index();
+        if (idx != -1) {
+          const BooksDir::EBookRecord * book = books_dir.get_book_data(idx);
+          if (book != nullptr) {
+            std::string filepath = BOOKS_FOLDER "/";
+            filepath += book->filename;
+            struct stat file_stat;
+
+            if (stat(filepath.c_str(), &file_stat) != -1) {
+              LOG_I("Deleting %s...", filepath.c_str());
+
+              unlink(filepath.c_str());
+              int16_t pos = filepath.find_last_of('.');
+              filepath.replace(pos, 5, ".pars");
+              if (stat(filepath.c_str(), &file_stat) != -1) {
+                unlink(filepath.c_str());
+              }
+              filepath.replace(pos, 5, ".locs");
+              if (stat(filepath.c_str(), &file_stat) != -1) {
+                unlink(filepath.c_str());
+              }
+              filepath.replace(pos, 5, ".toc");
+              if (stat(filepath.c_str(), &file_stat) != -1) {
+                unlink(filepath.c_str());
+              }
+
+              books_refresh_needed = true;
+              int16_t dummy;
+              books_dir.refresh(nullptr, dummy, false);
+            }
+          }
+        }
+        app_controller.set_controller(AppController::Ctrl::DIR);
+        menu_viewer.clear_highlight();
+      }
+      else {
+        menu_viewer.clear_highlight();
+        app_controller.set_controller(AppController::Ctrl::LAST);
+      }
+      delete_current_book_is_shown = false;
     }
   }
 
