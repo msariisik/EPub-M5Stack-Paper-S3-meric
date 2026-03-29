@@ -111,7 +111,7 @@ void MenuViewer::show(MenuEntry *the_menu, uint8_t entry_index,
   Pos p(ICONS_LEFT_OFFSET, icon_ypos);
 
   int16_t spacing = SPACE_BETWEEN_ICONS;
-  if (count <= 4) spacing = 150; // Spread out sparse menus like Main Menu
+  if (count <= 4) spacing = 120; // Spread out sparse menus like Main Menu
 
   for (int i = 0; i < count; i++) {
     if (row_count[row_val] > 0 &&
@@ -154,12 +154,18 @@ void MenuViewer::show(MenuEntry *the_menu, uint8_t entry_index,
   // PASS 4: Drawing icons
   for (int i = 0; i < count; i++) {
     int mIdx = items[i].m_idx;
+    if (items[i].ch == 'V') {
+      fmt.font_index = 1; // Use text font for 'V'
+    } else {
+      fmt.font_index = 0; // Use icon font for others
+    }
     page.put_char_at(items[i].ch,
                      Pos(entry_locs[mIdx].pos.x,
                          entry_locs[mIdx].pos.y -
                              (items[i].glyph ? items[i].glyph->yoff : 0)),
                      fmt);
   }
+  fmt.font_index = 0; // Restore default for safety
 
   // PASS 5: Selecting highlighted entry and Drawing caption
   int safety = 0;

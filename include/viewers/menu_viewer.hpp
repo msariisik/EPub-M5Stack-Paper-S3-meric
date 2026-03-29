@@ -14,11 +14,11 @@ class MenuViewer
 
     enum class Icon { RETURN,      CLR_HISTORY, REFRESH,   BOOK,   BOOK_LIST, MAIN_PARAMS, 
                       FONT_PARAMS, POWEROFF,    WIFI,      INFO,   TOC,       DEBUG, 
-                      DELETE,      CLOCK,       NTP_CLOCK, CALIB,  PREV_MENU, NEXT_MENU, REVERT, HOME, END_MENU };
-    char icon_char[21] = { 
+                      DELETE,      CLOCK,       NTP_CLOCK, CALIB,  PREV_MENU, NEXT_MENU, REVERT, HOME, VCARD, END_MENU };
+    char icon_char[22] = { 
                       '@',         'T',         'R',       'E',    'F',       'C', 
                       'A',         'Z',         'S',       'I',    'L',       'H', 
-                      'K',         'N',         'Y',       'M',    'O',       'P',   'U',   'Q', '\0' };
+                      'K',         'N',         'Y',       'M',    'O',       'P',   'U',   'Q', 'V', '\0' };
     struct MenuEntry {
       Icon icon;
       const char * caption;
