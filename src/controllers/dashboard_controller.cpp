@@ -217,11 +217,28 @@ void DashboardController::draw_graph() {
   int sw = Screen::get_width();  
   int sh = Screen::get_height(); 
 
-  Page::Format fmt = {.line_height_factor = 1.0,
-                      .font_index = 1,
-                      .font_size = 14,
-                      .align = CSS::Align::CENTER,
-                      .display = CSS::Display::INLINE};
+  Page::Format fmt = {
+      .line_height_factor = 1.0,
+      .font_index = 1,
+      .font_size = 14,
+      .indent = 0,
+      .margin_left = 0,
+      .margin_right = 0,
+      .margin_top = 0,
+      .margin_bottom = 0,
+      .screen_left = 0,
+      .screen_right = 0,
+      .screen_top = 0,
+      .screen_bottom = 0,
+      .width = (int16_t)sw,
+      .height = (int16_t)sh,
+      .vertical_align = 0,
+      .trim = true,
+      .pre = false,
+      .font_style = Fonts::FaceStyle::NORMAL,
+      .align = CSS::Align::CENTER,
+      .text_transform = CSS::TextTransform::NONE,
+      .display = CSS::Display::INLINE};
 
   page.set_compute_mode(Page::ComputeMode::DISPLAY);
   page.start(fmt);
