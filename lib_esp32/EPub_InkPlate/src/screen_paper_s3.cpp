@@ -179,12 +179,19 @@ static inline void set_pixel_nibble_physical(uint16_t x, uint16_t y, uint8_t nib
 
 static inline void set_pixel_nibble_screen(uint16_t x, uint16_t y, uint8_t nibble)
 {
-  // Screen coordinates for Paper S3 are logical portrait (width=540, height=960)
-  // with epdiy set to EPD_ROT_INVERTED_PORTRAIT.
-  // The equivalent physical coordinates in the 960x540 framebuffer are:
+  // Screen coordinates for Paper S3 are logical portrait (width=540, height=960).
+  // Orientation::BOTTOM (USB-C at bottom) uses:
   //   x_phys = y
   //   y_phys = (EPD_HEIGHT - 1) - x
-  set_pixel_nibble_physical(y, (uint16_t)((EPD_HEIGHT - 1) - x), nibble);
+  // Orientation::TOP (USB-C at top, 180 degree rotation) uses:
+  //   x_phys = (EPD_WIDTH - 1) - y
+  //   y_phys = x
+
+  if (Screen::get_singleton().get_orientation() == Screen::Orientation::TOP) {
+    set_pixel_nibble_physical((uint16_t)((EPD_WIDTH - 1) - y), x, nibble);
+  } else {
+    set_pixel_nibble_physical(y, (uint16_t)((EPD_HEIGHT - 1) - x), nibble);
+  }
 }
 
 void Screen::draw_bitmap(const unsigned char * bitmap_data, Dim dim, Pos pos)
