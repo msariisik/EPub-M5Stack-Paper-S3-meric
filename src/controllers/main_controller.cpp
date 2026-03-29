@@ -53,12 +53,18 @@ static void enter_dashboard()
   app_controller.set_controller(AppController::Ctrl::DASHBOARD);
 }
 
+static void enter_vcard()
+{
+  app_controller.set_controller(AppController::Ctrl::VCARD);
+}
+
 static MenuViewer::MenuEntry menu[] = {
   { MenuViewer::Icon::BOOK_LIST,   "E-Books Reader",  enter_books_dir,      true, true },
   { MenuViewer::Icon::INFO,        "Dashboard",       enter_dashboard,      true, true },
   #if DATE_TIME_RTC
     { MenuViewer::Icon::NTP_CLOCK, "Sync RTC Time (NTP)", ntp_clock_adjust, true, true },
   #endif
+  { MenuViewer::Icon::VCARD,     "VCard QR",         enter_vcard,          true, true },
   { MenuViewer::Icon::END_MENU,    nullptr,           nullptr,              false, false }
 };
 

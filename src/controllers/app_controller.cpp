@@ -12,6 +12,7 @@
 #include "controllers/toc_controller.hpp"
 #include "controllers/main_controller.hpp"
 #include "controllers/dashboard_controller.hpp"
+#include "controllers/vcard_controller.hpp"
 #include "controllers/event_mgr.hpp"
 
 #if INKPLATE_6PLUS
@@ -73,6 +74,7 @@ void AppController::launch()
       case Ctrl::TOC:           toc_controller.leave(false); break;
       case Ctrl::MAIN:         main_controller.leave(false); break;
       case Ctrl::DASHBOARD: dashboard_controller.leave(false); break;
+      case Ctrl::VCARD:         vcard_controller.leave(false); break;
       case Ctrl::NONE:
       case Ctrl::LAST:                                  break;
     }
@@ -97,6 +99,7 @@ void AppController::launch()
       case Ctrl::TOC:           toc_controller.enter(); break;
       case Ctrl::MAIN:         main_controller.enter(); break;
       case Ctrl::DASHBOARD: dashboard_controller.enter(); break;
+      case Ctrl::VCARD:         vcard_controller.enter(); break;
       case Ctrl::NONE:
       case Ctrl::LAST:                                  break;
     }
@@ -127,6 +130,7 @@ AppController::input_event(const EventMgr::Event & event)
     case Ctrl::TOC:           toc_controller.input_event(event); break;
     case Ctrl::MAIN:         main_controller.input_event(event); break;
     case Ctrl::DASHBOARD: dashboard_controller.input_event(event); break;
+    case Ctrl::VCARD:         vcard_controller.input_event(event); break;
     case Ctrl::NONE:
     case Ctrl::LAST:                                             break;
   }
@@ -150,6 +154,7 @@ AppController::going_to_deep_sleep()
     case Ctrl::TOC:           toc_controller.leave(true); break;
     case Ctrl::MAIN:         main_controller.leave(true); break;
     case Ctrl::DASHBOARD: dashboard_controller.leave(true); break;
+    case Ctrl::VCARD:         vcard_controller.leave(true); break;
     case Ctrl::NONE:
     case Ctrl::LAST:                                      break;
   }
