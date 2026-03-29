@@ -23,35 +23,6 @@ pio run -e paper_s3 -t upload
 
 The PlatformIO environment for this device is `paper_s3` (see `platformio.ini`).
 
-## New Features (M5Stack Paper S3)
-
-This fork introduces several features specifically designed for the M5Stack Paper S3:
-
-### 📱 Interactive Main Menu
-A new icon-based navigation system replaces the traditional list-based entry.
-- **EPub Reader**: Access your library and read books.
-- **Dashboard**: View weather and time information.
-- **RTC Settings**: Sync time via NTP and configure your timezone.
-- **VCard**: Share your contact information quickly.
-
-### 📊 Weather Dashboard
-A dedicated screen that stays updated with live information:
-- **Weather Integration**: Fetches real-time weather data using the Open-Meteo API.
-- **Rain Forecast**: Displays a 4-hour hourly precipitation bar graph to help you plan your day.
-- **WiFi Sync**: Automatically connects to WiFi to keep data fresh.
-
-### 📇 VCard QR Dashboard
-A professional way to share your contact details:
-- **QR Code**: Generates a standard VCard QR code from your configuration.
-- **Photo Support**: Displays a custom photo (JPEG) loaded from the SD card.
-- **180° Flip Mode**: The screen automatically rotates 180 degrees (upside down) in this view, making it easy to show the QR code to someone standing in front of you without turning the device around.
-- **Customizable**: Name, Title, Org, Phone, Email, and URL are all configurable via `config.txt`.
-
-### ⚙️ Enhanced Configuration
-The `SDCard/config.txt` now supports additional fields:
-- `latitude` / `longitude`: For local weather data.
-- `vcard_name` / `vcard_tel` / etc.: For your personal contact info.
-- `vcard_photo`: Filename for your profile picture on the SD card.
 
 ## Last news
 
