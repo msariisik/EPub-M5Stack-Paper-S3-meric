@@ -1,280 +1,71 @@
-# EPub-M5Stack-Paper-S3 (fork of EPub-InkPlate)
+# M5Stack Paper S3 - Advanced E-Book Reader & Dashboard
 
-This repository is a fork of https://github.com/turgu1/EPub-InkPlate, ported to support the **M5Stack Paper S3** (ESP32-S3).
+An optimized E-Book reader and interactive dashboard specifically designed for the **M5Stack Paper S3** (ESP32-S3 e-ink device). 
 
-- **Upstream**: https://github.com/turgu1/EPub-InkPlate
-- **This fork**: https://github.com/juicecultus/EPub-M5Stack-Paper-S3
+This project is a powerful extension of the EPub-InkPlate engine, enhanced with a modern UI, real-time weather integration, and personal tools.
 
-### Quick start (M5Stack Paper S3)
+## Key Features
 
-```bash
-git clone --recurse-submodules https://github.com/juicecultus/EPub-M5Stack-Paper-S3.git
-cd EPub-M5Stack-Paper-S3
-
-# (Optional safety) ensure submodules are initialized
-git submodule update --init --recursive
-
-# Build
-pio run -e paper_s3
-
-# Flash
-pio run -e paper_s3 -t upload
-```
-
-The PlatformIO environment for this device is `paper_s3` (see `platformio.ini`).
-
-## New Features (M5Stack Paper S3)
-
-This fork introduces several features specifically designed for the M5Stack Paper S3:
+### 📖 Enhanced E-Book Reader
+- **EPub 2/3 Support**: Read your favorite books with full font (TTF/OTF) and image support.
+- **Custom Fonts**: Ships with premium fonts like Crimson, Caladea, and Red Hat.
+- **Optimized for S3**: Tailored for the Paper S3's 540x960 e-ink display with smooth refresh cycles.
 
 ### 📱 Interactive Main Menu
-A new icon-based navigation system replaces the traditional list-based entry.
-- **EPub Reader**: Access your library and read books.
-- **Dashboard**: View weather and time information.
-- **RTC Settings**: Sync time via NTP and configure your timezone.
-- **VCard**: Share your contact information quickly.
+- **Icon-Driven Navigation**: Easy-to-touch icons for all major features.
+- **Fast Switching**: Jump between reading, weather, and tools with a single tap.
 
-### 📊 Weather Dashboard
-A dedicated screen that stays updated with live information:
-- **Weather Integration**: Fetches real-time weather data using the Open-Meteo API.
-- **Rain Forecast**: Displays a 4-hour hourly precipitation bar graph to help you plan your day.
-- **WiFi Sync**: Automatically connects to WiFi to keep data fresh.
+### 📊 Real-Time Weather Dashboard
+- **Live Forecast**: Fetches real-time weather data and hourly precipitation forecasts via the Open-Meteo API.
+- **Visual Analytics**: 4-hour bar graph to track rain and plan your tasks.
+- **WiFi Aware**: Automatically connects and syncs data to keep your dashboard live.
 
 ### 📇 VCard QR Dashboard
-A professional way to share your contact details:
-- **QR Code**: Generates a standard VCard QR code from your configuration.
-- **Photo Support**: Displays a custom photo (JPEG) loaded from the SD card.
-- **180° Flip Mode**: The screen automatically rotates 180 degrees (upside down) in this view, making it easy to show the QR code to someone standing in front of you without turning the device around.
-- **Customizable**: Name, Title, Org, Phone, Email, and URL are all configurable via `config.txt`.
-
-### ⚙️ Enhanced Configuration
-The `SDCard/config.txt` now supports additional fields:
-- `latitude` / `longitude`: For local weather data.
-- `vcard_name` / `vcard_tel` / etc.: For your personal contact info.
-- `vcard_photo`: Filename for your profile picture on the SD card.
-
-## Last news
-
-(Updated 2022.5.01)
-
-Update to version 2.0.1
-
-- For Inkplate-6PLUS and Inkplate-10: The ESP-IDF-Inkplate library has been updated (v0.9.6) to support some of these devices to be delivered without a second MCP chip onboard. The presence of the second MCP is now dynamically detected by the software.
-
-- For all Inkplates: Now using ESP-IDF framework v4.3.2
-
-## Unresolved issue
-
-[ ] A device reset may happen reading a book, and changing the current font as the background process is computing pages location. 
+- **Instant Sharing**: Display a personal VCard QR code for quick contact sharing.
+- **Profile Photo**: Displays your profile picture (JPEG) directly from the SD card.
+- **Auto-Flip Mode**: The screen rotates **180°** automatically in this view, so you can easily show it to someone standing across from you.
 
 ---
 
-This is an EPub reader for the e-Radionica made Inkplate devices.
+## 🚀 Quick Start
 
-Here are the main characterics:
-
-- TTF, and OTF embedded fonts support.
-- Normal, Bold, Italic, Bold+Italic face types.
-- Bitmap images dithering display (JPEG, PNG).
-- EPub (V2, V3) book format subset.
-- UTF-8 characters (supplied fonts limited to latin1).
-- Inkplate tactile keys (single and double click to get six buttons).
-- Screen orientation (portrait / landscape).
-- Left, center, right, and justify text alignments.
-- Font size.
-- Indentation.
-- Some basic parameters and options.
-- Limited CSS formatting.
-- WiFi-based documents download (Web server based).
-- Battery state and power management (light, deep sleep, battery level display).
-- Table of content.
-- Multiple fonts choices selectable by the user.
-- Linear and matrix view of book list.
-- Real-Time clock.
-- Inkplate-6PLUS touch screen and backlit.
-- Keeps location of the last 10 books being read.
-
-Some vidos are  available on YouTube:
-
-- The first working version of the EPub-InkPlate application [Here](https://www.youtube.com/watch?v=VnTLMhEgsqA).
-- Demostration on the InkPlate-10 [Here](https://www.youtube.com/watch?v=qNAjbnEax8k).
-- Demonstration on the Inkplate-6PLUS [Here](https://www.youtube.com/watch?v=z1nvakbxiUQ).
-
-Some pictures from the InkPlate-6 version:
-
-<img src="doc/pictures/IMG_1377.JPG" alt="picture" width="300"/><img src="doc/pictures/IMG_1378.JPG" alt="picture" width="300"/>
-<img src="doc/pictures/IMG_1381.JPG" alt="picture" width="300"/>
-
-Some pictures from the Linux version:
-
-<img src="doc/pictures/books_select.png" alt="drawing" width="300"/><img src="doc/pictures/book_page.png" alt="drawing" width="300"/>
-
-A picture of the Web Server in a browser:
-
-<img src="doc/pictures/web_server.png" alt="drawing" width="500"/>
-
-Books Directory List: Linear vs Matrix View:
-
-<img src="doc/pictures/linear_view_6.png" alt="picture" width="300"/><img src="doc/pictures/matrix_view_6.png" alt="picture" width="300"/>
-
-
-### Runtime environment
-
-The EPub-InkPlate application requires that a micro-SD Card be present in the device. This micro-SD Card must be pre-formatted with a FAT32 partition. Two folders must be present in the partition: `fonts` and `books`. You must put the base fonts in the `fonts` folder and your EPub books in the `books` folder. The books must have the extension `.epub` in lowercase. 
-
-Height font types are supplied with the application. For each type, there are four fonts supplied, to support regular, bold, oblique, and bold-italic glyphs. The application offers the user to select one of those font types as the default font. The fonts have been cleaned-up and contain only Latin-1 glyphs.
-
-Another font is mandatory. It can be found in `SDCard/fonts/drawings.otf` and must also be located in the micro-SD Card `fonts` folder. It contains the icons presented in parameters/options menus.
-
-The `SDCard` folder under GitHub reflects what the micro-SD Card should look like. One file is missing there is the `books_dir.db` that is managed by the application. It contains the meta-data required to display the list of available ebooks on the card and is automatically maintained by the application. It is refreshed at boot time and when the user requires it to do so through the parameters menu. The refresh process takes some time (between 5 and 10 seconds per ebook) but is required to get fast ebook directory list on screen.
-
-### Fonts cleanup
-
-All fonts have been subsetted to Latin-1 plus some usual characters. The `fonts/orig` folder in the GitHub project contains all original fonts that are processed using the script `fonts/subsetter.sh`. This script uses the Python **pyftsubset** tool that is part of the **fontTools** package. To install the tool, you need to execute the following command:
-
+### 1. Build & Install
 ```bash
-$ pip install fonttools brotli zopfli
+# Clone the repository
+git clone --recurse-submodules https://github.com/meric-sioux/EPub-M5Stack-Paper-S3.git
+cd EPub-M5Stack-Paper-S3
+
+# Flash to your Paper S3
+pio run -e paper_s3 -t upload
 ```
 
-The script takes all font from the `orig` folder and generate the new subset fonts in `subset-latin1/otf` folder. The following commands must be executed:
+### 2. SD Card Setup
+Ensure your micro-SD card is formatted as FAT32 and contains the following structure:
+- `/books/`: Place your `.epub` files here.
+- `/fonts/`: Place your `.ttf`/`.otf` fonts here.
+- `config.txt`: Your personalized settings (see below).
+- `photo.jpg`: Your profile picture for the VCard.
 
-```bash
-$ cd fonts
-$ ./subsetter.sh
+### 3. Personalization (`config.txt`)
+Edit the configuration to match your location and details:
+```text
+latitude=51.4408
+longitude=5.4778
+vcard_name=Your Name
+vcard_tel=+00 123 456 789
+vcard_email=you@example.com
+vcard_photo=photo.jpg
 ```
 
-After that, all fonts in the `subset-latin1/otf` folder must be copied back in the `SDCard/fonts` folder.
+---
 
-## Development environment
+## 🧩 Credits & Fork Info
+This project is a fork of [EPub-InkPlate](https://github.com/turgu1/EPub-InkPlate), extensively modified for the ESP32-S3 hardware.
 
-[Visual Studio Code](https://code.visualstudio.com/) is the code editor I'm using. The [PlatformIO](https://platformio.org/) extension is used to manage application configuration for both Linux and the ESP32.
+- **Upstream README**: For detailed lower-level driver info and original project history, see [README_FORKED.md](README_FORKED.md).
+- **Driver**: Powered by [epdiy](https://github.com/vroland/epdiy) for high-performance e-ink rendering.
+- **QR Engine**: Using [qrcodegen](https://github.com/nayuki/QR-Code-generator).
 
-All source code is located in various folders:
+---
 
-- Source code used by both Linux and InkPlate is located in the `include` and `src` folders
-- Source code in support of Linux only is located in the `lib_linux` folder
-- Source code in support of the InkPlate device (ESP32) only are located in the `lib_esp32` folder
-- The FreeType library for ESP32 is in folder `lib_freetype`
-
-The file `platformio.ini` contains the configuration options required to compile both Linux and InkPlate applications.
-
-Note that source code located in folders `old` and `test` is not used. It will be deleted from the project when the application development will be completed.
-
-### Dependencies
-
-The following are the libraries currently in use by the application:
-
-- [GTK+3](https://www.gtk.org/) (Only for the Linux version) The development headers must be installed. This can be done with the following command (on Linux Mint):
-  
-  ``` bash
-  $ sudo apt-get install build-essential libgtk-3-dev
-  ```
-
-The following are imported C header and source files, that implement some algorithms:
-
-- [FreeType](https://www.freetype.org) (Parse, decode, and rasterize characters from TrueType fonts) A version of the library has been loaded in folder `freetype-2.10.4/` and compiled with specific options for the ESP32. See sub-section **FreeType library compilation for ESP32** below for further explanations.
-- [PubiXML](https://pugixml.org/) (For XML parsing)
-- [STB](https://github.com/nothings/stb) (For image resizing) :
-
-  - `stb_image_resize.h` resize images larger/smaller 
-
-- [PNGLE](https://github.com/kikuchan/pngle) (For PNG Images) The EPub-Inkplate uses a modified version that is optimized for grayscale output instead of RGBA.
-- [MINIZ](https://github.com/kikuchan/pngle) (For Zip/PNG files and epub files decompress)
-- [TJPGD](http://elm-chan.org/fsw/tjpgd/00index.html) (For JPeg Images)
-
-The following libraries were used at first but replaced with counterparts:
-
-- [ZLib](https://zlib.net/) deflating (unzip). A file deflation function is already supplied with `PNGLE`.
-- [RapidXML](http://rapidxml.sourceforge.net/index.htm) (For XML parsing) Too much stack space required. Replaced with PubiXML.
-- [SQLite3](https://www.sqlite.org/index.html) (The amalgamation version. For books simple database) Too many issues to get it runs on an ESP32. I built my own simple DB tool (look at `src/simple_db.cpp` and `include/simble_db.hpp`)
-- [STB](https://github.com/nothings/stb) (For image extraction and unzip) Requires a lot of memory space depending on the ePub stored image resolution. Changed to use PNGLE and TJPGD combined with my own image classes to stream the image to the appropriate size without requiring to much memory space:
-
-  - `stb_image.h` PNG and JPeg images extraction 
-
-### FreeType library compilation for ESP32
-
-The FreeType library is using a complex makefile structure to simplify (!) the compilation process. Here are the steps used to get a library suitable for integration in the EPub-InkPlate ESP32 application. As this process is already done, there is no need to run it again, unless a new version of the library is required or some changes to the modules selection are done.
-
-1. The folder named `lib_freetype` is created to receive the library and its dependencies at install time:
-
-    ``` bash
-    $ mkdir lib_freetype
-    ```
-
-2. The ESP-IDF SDK must be installed in the main user folder. Usually, it is in folder ~/esp. The following location documents the installation procedure: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html . Look at Steps 1 to 4 (Setting Up Development Environment). This is important as the configuration setup below will access ESP32 related compilation tools.
-
-3. The files `freetype-2.10.4/modules.cfg` and `freetype-2.10.4/include/freetype/config/ftoption.h` are modified to only keep the capabilities required to support TrueType and OpenType fonts. The original files have been saved in `*.orig` files.
-
-4. A file named `freetype-2.10.4/myconf.sh` is created to simplify the configuration of the makefile structure. The `--prefix` option may require some modification to take into account the location where the EPub-InkPlate source code has been put. The `--prefix` must point to the `lib_freetype` folder.
-
-5. The following commands are executed:
-
-   ``` bash
-   $ cd freetype-2.10.4
-   $ bash myconf.sh
-   $ make
-   $ make install
-   ```
-
-   This will have created several files in the folder `lib_freetype`.
-
-6. Edit file named `lib_freetype/lib/pkgconfig/freetype2.pc` and remove the entire line that contains `harfbuzz` reference.
-7. Voilà...
-
-### ESP-IDF configuration specifics
-
-The EPub-InkPlate application requires some functionalities to be properly set up within the ESP-IDF. To do so, some parameters located in the `sdkconfig` file must be set accordingly. This must be done using the menuconfig application that is part of the ESP-IDF. 
-
-The following is not required to be done as the file `sdkconfig.defaults` contains the changes that will trigger the generation of the suitable `sdkconfig.<project_name>` file related to the project being compiled.
-
-The current release of PlatformIO allow for editing the `sdkconfig` through the PlatformIO's `Run Menuconfig` command located in the Project Tasks. 
-
-The application will show a list of configuration aspects. 
-
-The following elements have been done (No need to do it again as they are defined in file `sdkconfig.defaults`):
-  
-- **PSRAM memory management**: The PSRAM is an extension to the ESP32 memory that offers 4MB+4MB of additional RAM. The first 4MB is readily available to integrate into the dynamic memory allocation of the ESP-IDF SDK. To configure PSRAM:
-
-  - Select `Component Config` > `ESP32-Specific` > `Support for external, SPI-Connected RAM`
-  - Select `SPI RAM config` > `Initialize SPI RAM during startup`
-  - Select `Run memory test on SPI RAM Initialization`
-  - Select `Enable workaround for bug in SPI RAM cache for Rev 1 ESP32s`
-  - Select `SPI RAM access method` > `Make RAM allocatable using malloc() as well`
-
-  Leave the other options as they are. 
-
-- **ESP32 processor speed**: The processor must be run at 240MHz. The following line in `platformio.ini` request this speed:
-
-    ```
-    board_build.f_cpu = 240000000L
-    ```
-  You can also select the speed in the sdkconfig file:
-
-  - Select `Component config` > `ESP32-Specific` > `CPU frequency` > `240 Mhz`
-
-- **FAT Filesystem Support**: The application requires the usage of the micro SD card. This card must be formatted on a computer (Linux or Windows) with a FAT32 partition (maybe not required as this is the default format of brand new cards). The following parameters must be adjusted in `sdkconfig`:
-
-  - Select `Component config` > `FAT Filesystem support` > `Max Long filename length` > `255`
-  - Select `Number of simultaneously open files protected  by lock function` > `5`
-  - Select `Prefer external RAM when allocating FATFS buffer`
-  - Depending on the language to be used (My own choice is Latin-1 (CP850)), select the appropriate Code Page for filenames. Select `Component config` > `FAT Filesystem support` > `OEM Code Page...`. DO NOT use Dynamic as it will add ~480KB to the application!!
-  - Also select `Component config` > `FAT Filesystem support` > `API character encoding` > `... UTF-8 ...`
-
-- **HTTP Server**: The application is supplying a Web server (through the use of HTTP) to the user to modify the list of books present on the SDCard. The following parameters must be adjusted:
-  - Select `Component config` > `HTTP Server` > `Max HTTP Request Header Length` > 1024
-  - Select `Component config` > `HTTP Server` > `Max HTTP URI Length` > 1024
-
-- **WiFi memory buffers in PSRAM**: The WiFi implementation use a large portion of memory. There is not enough main memory available for the buffer required, so it must be allocated from the PSRAM:
-  - Select `Component config` > `ESP32-specific` > `Support for externa,, SPI-connected RAM` > `SPI RAM config` > `Try to allocate memories of WiFi and LWIP in SPIRAM firstly.`
-
-The following is not configured through *menuconfig:*
-
-- **Flash memory partitioning**: the file `partitions.csv` contains the table of partitions required to support the application in the 4MB flash memory. The factory partition has been set to be ~2.4MB in size (OTA is not possible as the application is too large to accomodate this feature; the OTA related partitions have been commented out...). In the `platformio.ini` file, the line `board_build.partitions=...` is directing the use of these partitions configuration.
-    
-## In Memoriam
-
-When I started this effort, I was aiming at supplying a tailored ebook reader for a friend of mine that has been impaired by a spinal cord injury for the last 13 years and a half. Reading books and looking at TV were the only activities she was able to do as she lost control of her body, from the neck down to the feet. After several years of physiotherapy, she was able to do some movement with her arms, without any control of her fingers. She was then able to push on buttons of an ebook reader with a lot of difficulties. I wanted to build a joystick-based interface to help her with any standard ebook reader but none of the commercially available readers allowed for this kind of integration.
-
-On September 27th, 2020, we learned that she was diagnosed with the Covid-19 virus. She passed away during the night of October 1st.
-
-I dedicate this effort to her. Claudette, my wife and I will always remember you!
+Developed for the **M5Stack Paper S3**. Premium aesthetics, powerful performance.
