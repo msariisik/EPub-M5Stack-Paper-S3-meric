@@ -29,6 +29,13 @@
 #      show_rtc
 #      ntp_server
 #      tz
+#      vcard_name
+#      vcard_title
+#      vcard_org
+#      vcard_tel
+#      vcard_email
+#      vcard_url
+#      vcard_photo
 # ---
 
 version = 1
@@ -50,3 +57,10 @@ dir_view = 1
 show_rtc = 0
 ntp_server = "pool.ntp.org"
 tz="CET-1CEST,M3.5.0,M10.5.0/3"
+vcard_name = "Your Name"
+vcard_title = "Your Title"
+vcard_org = "Your Organization"
+vcard_tel = "+00 000 000 0000"
+vcard_email = "you@example.com"
+vcard_url = "https://example.com"
+vcard_photo = "photo.jpg"

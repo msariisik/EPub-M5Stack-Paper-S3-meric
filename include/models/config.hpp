@@ -17,21 +17,22 @@ enum class ConfigIdent {
     TIME_ZONE,
   #endif
   #if INKPLATE_6PLUS
-    CALIB_A, CALIB_B, CALIB_C, CALIB_D, CALIB_E, CALIB_F, CALIB_DIVIDER
+    CALIB_A, CALIB_B, CALIB_C, CALIB_D, CALIB_E, CALIB_F, CALIB_DIVIDER,
   #endif
+  VCARD_NAME, VCARD_TITLE, VCARD_ORG, VCARD_TEL, VCARD_EMAIL, VCARD_URL, VCARD_PHOTO
 };
 
 #if INKPLATE_6PLUS
   #if DATE_TIME_RTC
-    typedef ConfigBase<ConfigIdent, 26> Config;
+    typedef ConfigBase<ConfigIdent, 33> Config;
   #else
-    typedef ConfigBase<ConfigIdent, 23> Config;
+    typedef ConfigBase<ConfigIdent, 30> Config;
   #endif
 #else
   #if DATE_TIME_RTC
-    typedef ConfigBase<ConfigIdent, 21> Config;
+    typedef ConfigBase<ConfigIdent, 28> Config;
   #else
-    typedef ConfigBase<ConfigIdent, 18> Config;
+    typedef ConfigBase<ConfigIdent, 25> Config;
   #endif
 #endif
 
@@ -64,10 +65,19 @@ enum class ConfigIdent {
     static char   ntp_server[32];
     static char   time_zone[32];
   #endif
+
   #if INKPLATE_6PLUS
     static int64_t calib_a, calib_b, calib_c, calib_d, calib_e, calib_f, calib_divider;
     static const int64_t default_calib             =  0;
   #endif
+
+  static char vcard_name[64];
+  static char vcard_title[64];
+  static char vcard_org[64];
+  static char vcard_tel[32];
+  static char vcard_email[64];
+  static char vcard_url[64];
+  static char vcard_photo[64];
 
   static const int32_t  default_port               = 80;
   static const int8_t   default_battery            =  2;  // 0 = NONE, 1 = PERCENT, 2 = VOLTAGE, 3 = ICON
@@ -124,6 +134,13 @@ enum class ConfigIdent {
     { Config::Ident::CALIB_F,            Config::EntryType::INT64,   "calib_f",           &calib_f,            &default_calib,              0 },
     { Config::Ident::CALIB_DIVIDER,      Config::EntryType::INT64,   "calib_divider",     &calib_divider,      &default_calib,              0 },
     #endif
+    { Config::Ident::VCARD_NAME,         Config::EntryType::STRING,  "vcard_name",        vcard_name,          "Your Name",                64 },
+    { Config::Ident::VCARD_TITLE,        Config::EntryType::STRING,  "vcard_title",       vcard_title,         "Your Title",               64 },
+    { Config::Ident::VCARD_ORG,          Config::EntryType::STRING,  "vcard_org",         vcard_org,           "Your Organization",        64 },
+    { Config::Ident::VCARD_TEL,          Config::EntryType::STRING,  "vcard_tel",         vcard_tel,           "+00 000 000 0000",         32 },
+    { Config::Ident::VCARD_EMAIL,        Config::EntryType::STRING,  "vcard_email",       vcard_email,         "you@example.com",          64 },
+    { Config::Ident::VCARD_URL,          Config::EntryType::STRING,  "vcard_url",         vcard_url,           "https://example.com",      64 },
+    { Config::Ident::VCARD_PHOTO,        Config::EntryType::STRING,  "vcard_photo",       vcard_photo,         "photo.jpg",                64 },
   }};
 
   // Config config(conf, CONFIG_FILE);
